@@ -1,0 +1,551 @@
+<!doctype html>
+<html lang="ru">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="robots" content="noindex,nofollow">
+<title>Твоя гончарная мастерская</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.css">
+<style>
+:root{
+  --bg:#f3f4f1; --surface:#ffffff; --surface-2:#eaede6; --ink:#1d2421; --ink-2:#4a554f; --muted:#7a857f;
+  --line:#d7ddd5; --accent:#4f7a68; --accent-ink:#ffffff; --accent-soft:#dfeae4;
+  --clay:#b8774f; --clay-soft:#f3e4d9;
+  --neg:#b4553f; --neg-soft:#f4e3dd; --pos:#4f7a68; --warn:#8a6d1f; --warn-soft:#f4ecd4;
+  --radius:16px; --shadow:0 1px 2px rgba(20,30,25,.06),0 4px 16px rgba(20,30,25,.05);
+  color-scheme:light;
+}
+@media (prefers-color-scheme:dark){
+  :root:not([data-theme="light"]){
+    --bg:#141917; --surface:#1c2320; --surface-2:#232c28; --ink:#e7ece9; --ink-2:#b5c0ba; --muted:#86928b;
+    --line:#2f3a35; --accent:#7fb39c; --accent-ink:#0f1513; --accent-soft:#24362e;
+    --clay:#e0a57f; --clay-soft:#3a2b22;
+    --neg:#e08a72; --neg-soft:#3a2620; --pos:#7fb39c; --warn:#d8b860; --warn-soft:#352e1a;
+    --shadow:none; color-scheme:dark;
+  }
+}
+:root[data-theme="dark"]{
+  --bg:#141917; --surface:#1c2320; --surface-2:#232c28; --ink:#e7ece9; --ink-2:#b5c0ba; --muted:#86928b;
+  --line:#2f3a35; --accent:#7fb39c; --accent-ink:#0f1513; --accent-soft:#24362e;
+  --clay:#e0a57f; --clay-soft:#3a2b22;
+  --neg:#e08a72; --neg-soft:#3a2620; --pos:#7fb39c; --warn:#d8b860; --warn-soft:#352e1a;
+  --shadow:none; color-scheme:dark;
+}
+*{box-sizing:border-box}
+html{scroll-behavior:smooth;scroll-padding-top:64px}
+body{margin:0;background:var(--bg);color:var(--ink);font:17px/1.6 "Manrope",system-ui,-apple-system,"Segoe UI",sans-serif;-webkit-text-size-adjust:100%}
+a{color:var(--accent);text-underline-offset:2px}
+.wrap{max-width:860px;margin:0 auto;padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px))}
+/* шапка */
+header.hero{position:relative;overflow:hidden;padding-block:56px 40px}
+.hero .kicker{font-size:13px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:var(--clay)}
+.hero h1{font-size:clamp(32px,6vw,52px);line-height:1.08;margin:10px 0 18px;font-weight:800;letter-spacing:-.02em;max-width:640px}
+.hero .lead{font-size:19px;color:var(--ink-2);max-width:600px;margin:0 0 24px}
+.hero .cta{display:inline-block;background:var(--accent);color:var(--accent-ink);text-decoration:none;font-weight:700;padding:12px 22px;border-radius:12px}
+.hero .cta2{display:inline-block;margin-left:14px;font-weight:700;text-decoration:none}
+.wheel{position:absolute;right:-90px;top:30px;width:340px;height:340px;border-radius:50%;pointer-events:none;
+  background:repeating-radial-gradient(circle,var(--clay-soft) 0 14px,transparent 14px 28px);opacity:.9;z-index:-1}
+@media (max-width:700px){.wheel{width:240px;height:240px;right:-110px;top:10px;opacity:.6}.hero .cta2{display:block;margin:14px 0 0}}
+nav.toc{position:sticky;top:0;z-index:1000;background:color-mix(in srgb,var(--bg) 92%,transparent);backdrop-filter:blur(8px);border-bottom:1px solid var(--line)}
+nav.toc .wrap{display:flex;gap:6px;overflow-x:auto;padding-block:10px;scrollbar-width:none}
+nav.toc .wrap::-webkit-scrollbar{display:none}
+nav.toc a{flex:none;text-decoration:none;color:var(--ink-2);font-size:14px;font-weight:600;padding:6px 12px;border-radius:999px;background:var(--surface);border:1px solid var(--line);white-space:nowrap}
+nav.toc a.q{background:var(--accent);color:var(--accent-ink);border-color:var(--accent)}
+section{padding-block:36px}
+h2{font-size:clamp(24px,4vw,30px);line-height:1.2;margin:0 0 16px;font-weight:800;letter-spacing:-.015em}
+h3{font-size:18px;margin:0 0 6px;font-weight:700}
+p{margin:0 0 14px}
+.muted{color:var(--muted);font-size:14px}
+.letter{background:var(--surface);border:1px solid var(--line);border-radius:var(--radius);padding:24px;box-shadow:var(--shadow);font-size:18px}
+.letter p:last-child{margin:0}
+.sign{font-weight:700;color:var(--clay)}
+.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(230px,1fr));gap:12px}
+.card{background:var(--surface);border:1px solid var(--line);border-radius:var(--radius);padding:18px;box-shadow:var(--shadow)}
+.card p{margin:0;color:var(--ink-2);font-size:15.5px}
+.card .em{font-size:26px;line-height:1;margin-bottom:10px;display:block}
+.card .price{display:inline-block;margin-top:10px;font-size:13px;font-weight:700;color:var(--clay);background:var(--clay-soft);padding:3px 9px;border-radius:999px}
+.kpis{display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:12px;margin-bottom:20px}
+.kpi{background:var(--surface);border:1px solid var(--line);border-radius:var(--radius);padding:16px;box-shadow:var(--shadow)}
+.kpi b{display:block;font-size:28px;font-weight:800;letter-spacing:-.01em}
+.kpi span{font-size:14px;color:var(--ink-2)}
+.kpi.hl{background:var(--accent-soft);border-color:transparent}
+.note{border-left:4px solid var(--accent);background:var(--accent-soft);padding:14px 16px;border-radius:0 12px 12px 0;margin:16px 0}
+.note.clay{border-color:var(--clay);background:var(--clay-soft)}
+.income{background:var(--surface);border:2px solid var(--accent);border-radius:var(--radius);padding:20px;margin-top:16px}
+.income .range{font-size:clamp(26px,5vw,34px);font-weight:800;letter-spacing:-.01em;color:var(--accent);margin:4px 0 12px}
+.scen{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin:0 0 12px}
+.scen div{background:var(--surface-2);border-radius:10px;padding:10px;text-align:center}
+.scen b{display:block;font-size:20px}
+.scen span{font-size:13px;color:var(--ink-2)}
+.chart{display:grid;grid-template-columns:repeat(24,1fr);gap:3px;align-items:center;height:200px;padding:10px 4px 0;position:relative}
+.chart .col{position:relative;height:100%;display:flex;flex-direction:column}
+.chart .up,.chart .dn{flex:1;display:flex}
+.chart .up{align-items:flex-end}
+.chart .dn{align-items:flex-start;flex:0 0 28%}
+.chart .bar{width:100%;border-radius:3px 3px 0 0;background:var(--pos)}
+.chart .dn .bar{background:var(--neg);border-radius:0 0 3px 3px}
+.chart-l{display:grid;grid-template-columns:repeat(24,1fr);gap:3px;font-size:10px;color:var(--muted);text-align:center;padding:4px 4px 0}
+.legend{display:flex;justify-content:space-between;font-size:13px;color:var(--muted);margin-top:6px}
+.cols2{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+@media (max-width:700px){.cols2{grid-template-columns:1fr}.chart{height:160px}.chart-l span:nth-child(even){visibility:hidden}.scen b{font-size:17px}}
+.role h3{display:flex;align-items:center;gap:8px}
+.role ul{margin:8px 0 0;padding-left:20px;color:var(--ink-2);font-size:16px}
+.role ul li{margin-bottom:6px}
+.role.me{border-top:4px solid var(--clay)}
+.role.you{border-top:4px solid var(--accent)}
+.steps{list-style:none;margin:0;padding:0;position:relative}
+.steps li{position:relative;padding:0 0 22px 34px}
+.steps li::before{content:"";position:absolute;left:7px;top:8px;width:12px;height:12px;border-radius:50%;background:var(--accent)}
+.steps li::after{content:"";position:absolute;left:12px;top:22px;bottom:0;width:2px;background:var(--line)}
+.steps li:last-child::after{display:none}
+.steps li:last-child::before{background:var(--clay);width:16px;height:16px;left:5px;top:6px}
+.steps b{display:block}
+.steps span{color:var(--ink-2);font-size:15.5px}
+.fear{margin-bottom:12px}
+.fear h3{font-size:17px}
+.tbl{overflow-x:auto;border:1px solid var(--line);border-radius:12px;background:var(--surface);margin:10px 0 14px}
+table{border-collapse:collapse;width:100%;font-size:14px}
+th,td{padding:9px 12px;text-align:left;vertical-align:top;border-bottom:1px solid var(--line)}
+th{background:var(--surface-2);font-weight:700;white-space:nowrap}
+tr:last-child td{border-bottom:0}
+td.num{text-align:right;white-space:nowrap;font-variant-numeric:tabular-nums}
+tr.best td{background:var(--accent-soft)}
+tr.home td{background:var(--clay-soft)}
+tr[data-i]{cursor:pointer}
+/* карта */
+#map{height:420px;border-radius:var(--radius);border:1px solid var(--line);overflow:hidden;background:var(--surface-2);z-index:0}
+@media (max-width:700px){#map{height:340px}}
+.pin{width:28px;height:28px;border-radius:50%;background:var(--accent);color:var(--accent-ink);border:2px solid #fff;box-shadow:0 1px 4px rgba(0,0,0,.35);display:flex;align-items:center;justify-content:center;font:700 13px "Manrope",sans-serif}
+.pin.best{background:#2f6b52;width:32px;height:32px;font-size:14px}
+.pin.home{background:var(--clay);width:36px;height:36px;font-size:18px}
+.leaflet-popup-content{font:14px/1.45 "Manrope",sans-serif;margin:10px 14px}
+.leaflet-popup-content b{font-size:15px}
+.maplegend{display:flex;flex-wrap:wrap;gap:14px;font-size:14px;color:var(--ink-2);margin:10px 0 4px}
+.maplegend i{display:inline-block;width:14px;height:14px;border-radius:50%;vertical-align:-2px;margin-right:6px}
+details{border:1px solid var(--line);border-radius:var(--radius);background:var(--surface);margin:10px 0}
+details summary{cursor:pointer;padding:14px 16px;font-weight:700;list-style:none}
+details summary::-webkit-details-marker{display:none}
+details summary::after{content:"＋";float:right;color:var(--muted)}
+details[open] summary::after{content:"－"}
+details .in{padding:0 16px 14px;font-size:15.5px}
+details ul{padding-left:20px;margin:0 0 10px}
+/* вопросы */
+#voprosy{background:var(--surface);border-top:1px solid var(--line);border-bottom:1px solid var(--line);margin-top:20px}
+.howto{background:var(--accent-soft);border-radius:var(--radius);padding:16px 18px;margin:0 0 10px}
+.howto h3{margin-bottom:8px}
+.howto ol{margin:0;padding-left:22px}
+.howto li{margin-bottom:6px}
+.howto li:last-child{margin-bottom:0}
+.qgroup{margin:26px 0 8px;font-size:13px;font-weight:700;letter-spacing:.06em;text-transform:uppercase;color:var(--accent)}
+.qa{margin-bottom:18px}
+.qa label.ql,.qa div.ql{display:block;font-weight:600;margin-bottom:6px}
+.qa .hint{display:block;font-weight:400;font-size:13px;color:var(--muted);margin-top:2px}
+textarea,input[type=text]{width:100%;font:inherit;font-size:16px;color:var(--ink);background:var(--bg);border:1px solid var(--line);border-radius:10px;padding:10px 12px;resize:vertical}
+textarea{min-height:76px}
+textarea:focus,input:focus{outline:2px solid var(--accent);outline-offset:1px;border-color:transparent}
+.chips{display:flex;flex-wrap:wrap;gap:8px}
+.chips label{display:flex;align-items:center;gap:6px;padding:7px 12px;border:1px solid var(--line);border-radius:999px;background:var(--bg);cursor:pointer;font-size:15px}
+.chips input{accent-color:var(--accent)}
+.bar-actions{position:sticky;bottom:0;background:var(--surface);border-top:1px solid var(--line);padding-block:12px;margin-top:18px;display:flex;flex-wrap:wrap;gap:10px;align-items:center;z-index:2}
+button{font:inherit;font-weight:700;font-size:15px;border-radius:10px;padding:10px 18px;cursor:pointer;border:1px solid var(--accent)}
+button.main{background:var(--accent);color:var(--accent-ink)}
+#status{font-size:14px;color:var(--ink-2);flex:1 1 220px}
+#status.ok{color:var(--pos)}
+#status.err{color:var(--neg)}
+#copybox{position:absolute;left:-9999px;top:0;width:1px;height:1px}
+#copyshow{display:none;width:100%;min-height:200px;margin-top:10px;font-size:14px}
+footer{padding-block:28px 40px;color:var(--muted);font-size:13px}
+</style>
+</head>
+<body>
+
+<header class="hero wrap">
+  <div class="wheel" aria-hidden="true"></div>
+  <div class="kicker">Насте — от Артура</div>
+  <h1>Своя гончарная мастерская. Давай сделаем?</h1>
+  <p class="lead">Я всё думаю про твою гончарку и предлагаю попробовать по-настоящему: своя студия, с твоим названием, твоим стилем и твоими учениками. Руководить будешь ты, а я помогу деньгами на старте и советом. Здесь коротко, как это может выглядеть, а в конце несколько вопросов к тебе.</p>
+  <a class="cta" href="#ideya">Читать</a>
+  <a class="cta2" href="#voprosy">Сразу к вопросам →</a>
+</header>
+
+<nav class="toc" aria-label="Разделы">
+  <div class="wrap">
+    <a href="#ideya">Идея</a>
+    <a href="#kak">Как это будет</a>
+    <a href="#pochemu">Почему получится</a>
+    <a href="#karta">Где</a>
+    <a href="#dengi">Деньги</a>
+    <a href="#roli">Кто что делает</a>
+    <a href="#plan">План</a>
+    <a href="#strahi">Если страшно</a>
+    <a class="q" href="#voprosy">Вопросы тебе</a>
+  </div>
+</nav>
+
+<main>
+<section id="ideya">
+  <div class="wrap">
+    <h2>Что я предлагаю</h2>
+    <div class="letter">
+      <p>Настя, ты уже умеешь то, за что люди с удовольствием платят: сесть за круг, сделать вещь руками, провести вечер без телефона. Студий в Москве много, но твоей пока нет.</p>
+      <p>Предлагаю открыть её весной 2027 года у нас в Зюзино. <b>Студия — твоя, и руководишь ею ты</b>: название, оформление, занятия, ученики, команда — всё решаешь ты. <b>Я помогаю деньгами на старте</b> — ремонт, печь, круги, мебель, первые месяцы аренды, — а ещё с юридическими вопросами, оформлением ИП и советом, когда он нужен.</p>
+      <p>Это не «бизнес Артура, в котором ты работаешь». Это твоё дело, а я рядом.</p>
+      <p class="sign">Артур</p>
+    </div>
+  </div>
+</section>
+
+<section id="kak">
+  <div class="wrap">
+    <h2>Как это может выглядеть</h2>
+    <p>Светлое помещение на первом этаже с витриной, чтобы прохожие видели круги. Три гончарных круга, большой стол на 6–8 человек, полки для сушки, своя печь. Днём — дети и ученики, вечером и в выходные — мастер-классы, свидания и праздники.</p>
+    <div class="grid">
+      <div class="card"><span class="em" aria-hidden="true">🏺</span><h3>Мастер-классы</h3><p>Разовые занятия на 1,5–2 часа для тех, кто хочет попробовать.</p><span class="price">2 000–3 500 ₽ с человека</span></div>
+      <div class="card"><span class="em" aria-hidden="true">💞</span><h3>Свидания на двоих</h3><p>Самый «подарочный» формат: пара, круг, атмосфера.</p><span class="price">6 000–15 000 ₽ за пару</span></div>
+      <div class="card"><span class="em" aria-hidden="true">🎉</span><h3>Дни рождения и девичники</h3><p>Студия целиком на компанию.</p><span class="price">от 10 000 ₽</span></div>
+      <div class="card"><span class="em" aria-hidden="true">📚</span><h3>Курсы «с нуля»</h3><p>Группа взрослых на месяц-два — постоянные ученики, которые возвращаются.</p><span class="price">7 500–25 000 ₽ за курс</span></div>
+      <div class="card"><span class="em" aria-hidden="true">🧒</span><h3>Детские группы</h3><p>После школы, рядом с домом — родители такое ищут.</p><span class="price">1 400–2 000 ₽ за занятие</span></div>
+      <div class="card"><span class="em" aria-hidden="true">🫖</span><h3>Твои изделия</h3><p>Продажа своей посуды, аренда кругов для тех, кто уже умеет, обжиг чужих работ.</p><span class="price">как захочешь</span></div>
+    </div>
+    <p class="muted" style="margin-top:12px">Цены — то, что сейчас берут московские студии (октябрь 2026). Какие форматы вести — решаешь ты, в вопросах внизу можно отметить.</p>
+  </div>
+</section>
+
+<section id="pochemu">
+  <div class="wrap">
+    <h2>Почему это получится</h2>
+    <div class="grid">
+      <div class="card"><h3>Рядом нет конкурентов</h3><p>В самом Зюзино (Каховка, Севастопольский проспект, Черноморский бульвар) гончарных студий нет. Спальный район, много семей с детьми — студию «у дома» там пока никто не открыл.</p></div>
+      <div class="card"><h3>Люди за это платят</h3><p>Гончарка в Москве — популярный досуг и подарок. Цены держатся, у хороших студий рейтинги 5,0 и сотни отзывов.</p></div>
+      <div class="card"><h3>Ты уже внутри</h3><p>Ты знаешь, как устроена гончарка, что нравится людям и чего не хватает. Это то, что франшизы продают за полмиллиона.</p></div>
+      <div class="card"><h3>Свой бренд, без франшизы</h3><p>Франшиза за два года забрала бы 0,6–0,8 млн ₽ и диктовала бы цены и оформление. Нам это не нужно — делаем по-своему.</p></div>
+    </div>
+  </div>
+</section>
+
+<section id="karta">
+  <div class="wrap">
+    <h2>Где может быть студия</h2>
+    <p>Ищем рядом с домом, в Зюзино: первый этаж, отдельный вход с улицы, окна под витрину, вода под две раковины и электричество под печь. Нужно 45–65 м². На карте — объявления, которые сдаются прямо сейчас. Нажми на точку, чтобы увидеть площадь и цену.</p>
+    <div id="map" role="region" aria-label="Карта помещений в Зюзино"></div>
+    <div class="maplegend">
+      <span><i style="background:var(--clay)"></i>Наш дом — Малая Юшуньская, 3</span>
+      <span><i style="background:#2f6b52"></i>Самый подходящий вариант</span>
+      <span><i style="background:var(--accent)"></i>Другие помещения</span>
+    </div>
+    <div class="tbl"><table id="ptable">
+      <thead><tr><th>№</th><th>Адрес</th><th>Площадь</th><th>Аренда в месяц</th></tr></thead>
+      <tbody></tbody>
+    </table></div>
+    <p class="muted">Объявления с ЦИАН на 20 октября 2026 — к зиме часть сдадут, появятся новые. Ближе к делу посмотрим вживую вместе. Хорошая цель — 100–140 тыс. ₽ в месяц.</p>
+  </div>
+</section>
+
+<section id="dengi">
+  <div class="wrap">
+    <h2>Про деньги — честно и коротко</h2>
+    <div class="kpis">
+      <div class="kpi"><b>≈2,7 млн ₽</b><span>на запуск — их даю я</span></div>
+      <div class="kpi"><b>5 месяцев</b><span>на раскачку, пока набираются ученики</span></div>
+      <div class="kpi hl"><b>≈180 тыс. ₽</b><span>прибыли студии в месяц в среднем на второй год</span></div>
+      <div class="kpi"><b>до 300 тыс. ₽</b><span>в лучшие месяцы — перед Новым годом</span></div>
+    </div>
+    <div class="card">
+      <h3>Прибыль студии по месяцам, тыс. ₽</h3>
+      <div class="chart" id="chart" aria-label="График прибыли студии по месяцам за два года"></div>
+      <div class="chart-l" id="chartL"></div>
+      <div class="legend"><span>1-й год (с марта 2027)</span><span>2-й год (с марта 2028)</span></div>
+    </div>
+    <div class="income">
+      <h3>Сколько можешь зарабатывать ты</h3>
+      <div class="range">≈60–180 тыс. ₽ в месяц</div>
+      <p>Это твой личный доход со второго года работы. Сколько именно — зависит от того, насколько заполнено расписание: сколько учеников ты наберёшь и как часто они будут возвращаться.</p>
+      <div class="scen">
+        <div><b>≈60 тыс.</b><span>если учеников меньше, чем ждём</span></div>
+        <div><b>≈125 тыс.</b><span>по нашему расчёту</span></div>
+        <div><b>≈180 тыс.</b><span>если расписание забито</span></div>
+      </div>
+      <p style="margin:0">Поднять доход можно простыми вещами: ещё одна детская группа, мастер-класс чуть дороже, корпоративы, продажа своих изделий. Как делим прибыль, пока студия возвращает вложения, обсудим вместе и запишем на бумаге — так, чтобы тебе было интересно.</p>
+    </div>
+    <div class="note clay"><b>Что важно знать заранее.</b> Летом у всех студий спад — люди на дачах и в отпусках, поэтому с зимы откладываем на лето. И главное в первые месяцы — набрать учеников: соцсети, сарафанное радио, подарочные сертификаты. Минус первых месяцев я уже заложил.</div>
+    <p class="muted">Цифры черновые: посчитаны по ценам рынка и средней загрузке. Твои ответы на вопросы помогут сделать их точнее.</p>
+  </div>
+</section>
+
+<section id="roli">
+  <div class="wrap">
+    <h2>Кто что делает</h2>
+    <div class="cols2">
+      <div class="card role you">
+        <h3>Ты — руководишь студией</h3>
+        <ul>
+          <li>Занятия, программы, форматы и атмосфера</li>
+          <li>Команда: находишь мастеров и администратора, учишь их, составляешь график, платишь зарплату</li>
+          <li>Клиенты, запись, соцсети — ты лицо студии</li>
+          <li>Помещение и ремонт под твой стиль, закупки глины, глазури и инструментов</li>
+          <li>Деньги студии: цены, расходы, план на месяц</li>
+          <li>Свои изделия — если захочешь</li>
+        </ul>
+      </div>
+      <div class="card role me">
+        <h3>Я — помогаю</h3>
+        <ul>
+          <li>Деньги на старте и подстраховка в первые месяцы</li>
+          <li>Юридические вопросы: договор аренды, договоры с сотрудниками</li>
+          <li>Оформление ИП, налоги на первых порах</li>
+          <li>Советы — когда попросишь</li>
+        </ul>
+      </div>
+    </div>
+    <p class="muted" style="margin-top:12px">Все решения по студии принимаешь ты. Я подключаюсь, когда нужна помощь.</p>
+  </div>
+</section>
+
+<section id="plan">
+  <div class="wrap">
+    <h2>Как будем двигаться</h2>
+    <ol class="steps">
+      <li><b>Сейчас</b><span>Ты читаешь, думаешь и отвечаешь на вопросы ниже. Никакой спешки.</span></li>
+      <li><b>Первая встреча</b><span>Говорим спокойно: хочешь ли ты, что смущает, какие форматы.</span></li>
+      <li><b>Вторая встреча</b><span>Смотрим помещения в Зюзино, договариваемся про деньги и доли, выбираем оборудование.</span></li>
+      <li><b>Зима</b><span>Оформляем ИП и аренду, ремонт, печь и круги. Ты придумываешь название и оформление, ищешь первых мастеров.</span></li>
+      <li><b>Февраль</b><span>Соцсети, первые записи, подарочные сертификаты.</span></li>
+      <li><b>Март 2027 — открытие</b><span>Первые гости за кругами в твоей студии.</span></li>
+    </ol>
+  </div>
+</section>
+
+<section id="strahi">
+  <div class="wrap">
+    <h2>Если страшно — это нормально</h2>
+    <div class="grid">
+      <div class="card fear"><h3>«Я никогда не вела бизнес»</h3><p>Научишься по ходу. Небольшая студия — это расписание, запись, команда из пары человек и учёт денег. Бухгалтерия у ИП простая, а с юридическими вопросами я помогу.</p></div>
+      <div class="card fear"><h3>«А если люди не пойдут?»</h3><p>Первые месяцы в минусе уже заложены, деньги на них есть. Рядом нет конкурентов, и мы заранее начнём собирать аудиторию.</p></div>
+      <div class="card fear"><h3>«А учёба?»</h3><p>Расписание строишь под себя: основные занятия — вечером и в выходные. На курсы можно взять мастера.</p></div>
+      <div class="card fear"><h3>«А если заболею или захочу в отпуск?»</h3><p>Для этого и нужна команда: мастер на подмену и администратор. Студия не должна держаться только на тебе каждый день.</p></div>
+    </div>
+  </div>
+</section>
+
+<section id="podrobnosti" style="padding-top:0">
+  <div class="wrap">
+    <h2 style="font-size:20px">Подробности, если интересно</h2>
+    <details>
+      <summary>Цены в московских студиях</summary>
+      <div class="in">
+        <div class="tbl"><table>
+          <tr><th>Формат</th><th>Цена</th></tr>
+          <tr><td>Мастер-класс 1,5–2 часа</td><td class="num">2 000–3 500 ₽</td></tr>
+          <tr><td>Свидание на двоих</td><td class="num">5 700–15 000 ₽</td></tr>
+          <tr><td>День рождения, девичник</td><td class="num">от 10 000 ₽</td></tr>
+          <tr><td>Индивидуальное занятие</td><td class="num">6 000–14 000 ₽</td></tr>
+          <tr><td>Курс или абонемент</td><td class="num">7 500–25 000 ₽</td></tr>
+          <tr><td>Детская группа, за занятие</td><td class="num">1 400–2 000 ₽</td></tr>
+          <tr><td>Аренда круга</td><td class="num">600–800 ₽/ч</td></tr>
+        </table></div>
+        <p class="muted">Собрано 20.10.2026 по Яндекс Картам, 2ГИС и сайтам студий: «Гончарная студия №1», «Глинка», Soil, Chalet, «Керамический Кактус», «Май» и другие.</p>
+      </div>
+    </details>
+  </div>
+</section>
+
+<section id="voprosy">
+  <div class="wrap">
+    <h2 style="padding-top:8px">Теперь главное — что думаешь ты</h2>
+    <p>Ответь своими словами — коротко или подробно, как удобно. Правильных ответов нет. Если что-то не нравится в моей идее — так и напиши, это тоже важно.</p>
+    <div class="howto">
+      <h3>Как отправить ответы</h3>
+      <ol>
+        <li>Напиши ответы в полях ниже. Можно не за один раз: всё, что написала, запоминается на этом телефоне или компьютере — закрой страницу и вернись позже по той же ссылке.</li>
+        <li>Когда готово, нажми зелёную кнопку <b>«Скопировать ответы»</b> внизу экрана.</li>
+        <li>Открой Telegram или WhatsApp, чат с Артуром.</li>
+        <li>Вставь ответы в поле сообщения: на телефоне — долгое нажатие и «Вставить», на компьютере — Ctrl+V. Отправь.</li>
+      </ol>
+    </div>
+    <form id="qform" autocomplete="off" onsubmit="return false">
+      <div id="qfields"></div>
+      <div class="bar-actions">
+        <button type="button" class="main" id="copyBtn">Скопировать ответы</button>
+        <span id="status" role="status" aria-live="polite">Черновик сохраняется на этом устройстве.</span>
+      </div>
+      <textarea id="copyshow" readonly aria-label="Твои ответы — выдели и скопируй вручную"></textarea>
+    </form>
+    <textarea id="copybox" aria-hidden="true" tabindex="-1"></textarea>
+  </div>
+</section>
+</main>
+
+<footer class="wrap">Артур · 20 октября 2026. Все цифры черновые — пересчитаем вместе с тобой.</footer>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.js"></script>
+<script>
+(function(){
+  /* --- карта помещений --- */
+  var P=[
+    {a:"Малая Юшуньская ул., 10к2",s:"65 м²",p:"140 тыс. ₽",ll:[55.65616,37.59279],best:true,n:"ближе всего к дому, подходящая площадь"},
+    {a:"Черноморский бульвар, 17к1",s:"45 м²",p:"70 тыс. ₽",ll:[55.64489,37.59982],n:"самый дешёвый, но тесновато"},
+    {a:"Черноморский бульвар, 22к2",s:"51 м²",p:"100 тыс. ₽",ll:[55.64679,37.60023]},
+    {a:"ул. Каховка, 23к5",s:"40 м²",p:"120 тыс. ₽",ll:[55.65360,37.57528],n:"маловато места"},
+    {a:"Балаклавский проспект, 16",s:"68 м²",p:"100 тыс. ₽",ll:[55.64215,37.60449],n:"цокольный этаж"},
+    {a:"Чонгарский бульвар, 1к4",s:"77 м²",p:"110 тыс. ₽",ll:[55.65204,37.61570],n:"цокольный этаж"},
+    {a:"Симферопольский бульвар, 10к1",s:"93 м²",p:"170 тыс. ₽",ll:[55.65784,37.60600],n:"просторно, но дороже"},
+    {a:"Чонгарский бульвар, 18А",s:"60 м²",p:"190 тыс. ₽",ll:[55.65312,37.61243]},
+    {a:"Малая Юшуньская ул., 3",s:"110 м²",p:"210 тыс. ₽",ll:[55.65459,37.59235],n:"в нашем доме, но большое и дорогое"},
+    {a:"Херсонская ул., 41",s:"130 м²",p:"286 тыс. ₽",ll:[55.65482,37.55920],n:"слишком большое"}
+  ];
+  var HOME={ll:[55.65459,37.59183]};
+  var tb=document.querySelector("#ptable tbody");
+  tb.insertAdjacentHTML("beforeend",'<tr class="home"><td>🏠</td><td><b>Наш дом</b> — Малая Юшуньская, 3</td><td></td><td></td></tr>');
+  P.forEach(function(x,i){
+    var tr=document.createElement("tr"); tr.dataset.i=i; if(x.best) tr.className="best";
+    tr.innerHTML="<td>"+(i+1)+"</td><td>"+x.a+(x.n?'<br><span class="muted">'+x.n+"</span>":"")+'</td><td class="num">'+x.s+'</td><td class="num">'+x.p+"</td>";
+    tb.appendChild(tr);
+  });
+  var markers=[];
+  if(window.L){
+    var map=L.map("map",{scrollWheelZoom:false}).setView([55.6515,37.5945],14);
+    L.tileLayer("https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png",{maxZoom:19,attribution:'&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a>'}).addTo(map);
+    var bounds=[HOME.ll];
+    P.forEach(function(x,i){
+      var m=L.marker(x.ll,{icon:L.divIcon({className:"",html:'<div class="pin'+(x.best?' best':'')+'">'+(i+1)+"</div>",iconSize:x.best?[32,32]:[28,28],iconAnchor:x.best?[16,16]:[14,14]}),zIndexOffset:x.best?500:0})
+        .addTo(map).bindPopup("<b>"+(i+1)+". "+x.a+"</b><br>"+x.s+" · "+x.p+" в месяц"+(x.n?"<br>"+x.n:""));
+      markers.push(m); bounds.push(x.ll);
+    });
+    L.marker(HOME.ll,{icon:L.divIcon({className:"",html:'<div class="pin home">🏠</div>',iconSize:[36,36],iconAnchor:[18,18]}),zIndexOffset:1000})
+      .addTo(map).bindPopup("<b>Наш дом</b><br>Малая Юшуньская, 3");
+    map.fitBounds(bounds,{padding:[30,30]});
+    tb.addEventListener("click",function(e){
+      var tr=e.target.closest("tr[data-i]"); if(!tr) return;
+      var m=markers[+tr.dataset.i]; map.setView(m.getLatLng(),16); m.openPopup();
+      document.getElementById("map").scrollIntoView({behavior:"smooth",block:"center"});
+    });
+  } else {
+    document.getElementById("map").innerHTML='<p style="padding:16px">Карта не загрузилась — список помещений ниже.</p>';
+  }
+
+  /* --- график прибыли --- */
+  var y1=[-72,-52,-33,-16,-2,27,107,144,201,282,144,267];
+  var y2=[259,197,156,95,74,95,177,197,238,300,136,259];
+  var all=y1.concat(y2), max=300, min=-80;
+  var months=["мар","апр","май","июн","июл","авг","сен","окт","ноя","дек","янв","фев"];
+  var ch=document.getElementById("chart"), lb=document.getElementById("chartL");
+  all.forEach(function(v,i){
+    var col=document.createElement("div"); col.className="col"; col.title=months[i%12]+" "+(i<12?"1-й год":"2-й год")+": "+v+" тыс. ₽";
+    var up=document.createElement("div"); up.className="up";
+    var dn=document.createElement("div"); dn.className="dn";
+    var b=document.createElement("div"); b.className="bar";
+    if(v>=0){b.style.height=(v/max*100)+"%"; up.appendChild(b);} else {b.style.height=(v/min*100)+"%"; dn.appendChild(b);}
+    col.appendChild(up); col.appendChild(dn); ch.appendChild(col);
+    var s=document.createElement("span"); s.textContent=months[i%12]; lb.appendChild(s);
+  });
+
+  /* --- вопросы --- */
+  var Q=[
+    {g:"Про решение и время"},
+    {id:"hochesh",t:"Хочешь ли ты этим заниматься? Что для тебя главное: деньги, своё дело, творчество, свобода?"},
+    {id:"pugaet",t:"Что пугает или смущает больше всего?",h:"Например: вести бизнес, деньги, ответственность, нехватка времени"},
+    {id:"chasy",t:"Сколько часов в неделю ты готова работать в студии?",h:"В расчёте ты ведёшь почти все занятия сама: около 25–30 часов в неделю плюс обжиги и соцсети"},
+    {id:"ucheba",t:"Учёба совмещается с вечерними занятиями и выходными?"},
+    {id:"komanda",t:"Как тебе идея руководить людьми — нанимать мастеров и администратора, учить их, составлять график?"},
+    {id:"dohod",t:"Какой доход в месяц тебе нужен, чтобы было «оно того стоит»?",h:"По расчёту выходит примерно 60–180 тыс. ₽ в месяц со второго года"},
+    {g:"Про твою нынешнюю гончарку"},
+    {id:"gde",t:"Как она называется, где находится, сколько там кругов и печей?"},
+    {id:"ceny",t:"Сколько стоят мастер-класс, курс, свидание? Сколько человек обычно на занятии, бывают ли пустые слоты?"},
+    {id:"mastera",t:"Сколько платят мастерам? Кто ведёт соцсети и запись?"},
+    {id:"nravitsya",t:"Что тебе там нравится и чего не хватает? Что бы ты сделала по-другому?"},
+    {id:"ucheniki",t:"Сколько твоих учеников или подписчиков, как думаешь, пойдут за тобой?"},
+    {g:"Про формат"},
+    {id:"formaty",type:"chips",t:"Что ты хочешь вести? Отметь всё, что нравится",opts:["Мастер-классы","Свидания","Дни рождения и девичники","Курсы для взрослых","Детские группы","Аренда кругов","Продажа своих изделий","Корпоративы и выезды"]},
+    {id:"ne_hochu",t:"А что точно не хочешь вести?"},
+    {id:"izdeliya",t:"Будешь ли продавать свои изделия? Сколько успеваешь делать в месяц?"},
+    {id:"korporativy",t:"Интересны ли корпоративы и выездные мастер-классы?"},
+    {id:"podmena",t:"Есть ли знакомый мастер, которого можно позвать в команду или на подмену?"},
+    {g:"Про помещение"},
+    {id:"tochki",t:"Какие точки на карте тебе нравятся? Напиши номера",short:true},
+    {id:"pomeshchenie",t:"Каким ты видишь помещение: что обязательно должно быть?"},
+    {g:"Напоследок"},
+    {id:"eshche",t:"Что ещё важно сказать или спросить у меня?"}
+  ];
+  var box=document.getElementById("qfields");
+  Q.forEach(function(q){
+    if(q.g){var g=document.createElement("div");g.className="qgroup";g.textContent=q.g;box.appendChild(g);return;}
+    var w=document.createElement("div"); w.className="qa";
+    var l=document.createElement(q.type?"div":"label"); l.className="ql"; l.textContent=q.t;
+    if(!q.type) l.htmlFor="q_"+q.id;
+    if(q.h){var h=document.createElement("span");h.className="hint";h.textContent=q.h;l.appendChild(h);}
+    w.appendChild(l);
+    if(q.type){
+      var c=document.createElement("div"); c.className="chips"; c.setAttribute("role",q.type==="radio"?"radiogroup":"group");
+      q.opts.forEach(function(o){
+        var lab=document.createElement("label"); var inp=document.createElement("input");
+        inp.type=q.type==="radio"?"radio":"checkbox"; inp.name=q.id; inp.value=o;
+        lab.appendChild(inp); lab.appendChild(document.createTextNode(o)); c.appendChild(lab);
+      });
+      w.appendChild(c);
+    } else {
+      var f=document.createElement(q.short?"input":"textarea"); if(q.short) f.type="text";
+      f.id="q_"+q.id; f.name=q.id; w.appendChild(f);
+    }
+    box.appendChild(w);
+  });
+
+  var form=document.getElementById("qform"), st=document.getElementById("status");
+  function setStatus(t,cls){st.textContent=t; st.className=cls||"";}
+  function collect(){
+    var o={};
+    Q.forEach(function(q){
+      if(q.g) return;
+      if(q.type==="chips") o[q.id]=[].slice.call(form.querySelectorAll('input[name="'+q.id+'"]:checked')).map(function(i){return i.value;});
+      else if(q.type==="radio"){var r=form.querySelector('input[name="'+q.id+'"]:checked'); o[q.id]=r?r.value:"";}
+      else o[q.id]=form.elements[q.id].value.trim();
+    });
+    return o;
+  }
+  function fill(o){
+    if(!o) return;
+    Q.forEach(function(q){
+      if(q.g||!(q.id in o)) return;
+      if(q.type){
+        var vals=[].concat(o[q.id]||[]);
+        form.querySelectorAll('input[name="'+q.id+'"]').forEach(function(i){i.checked=vals.indexOf(i.value)>-1;});
+      } else form.elements[q.id].value=o[q.id]||"";
+    });
+  }
+  var KEY="goncharnaya-nastya-draft-v1";
+  function loadDraft(){try{return JSON.parse(localStorage.getItem(KEY)||"null");}catch(e){return null;}}
+  function saveDraft(){try{localStorage.setItem(KEY,JSON.stringify({answers:collect(),at:new Date().toISOString()}));}catch(e){}}
+  var draft=loadDraft(); if(draft) fill(draft.answers);
+  var t=null;
+  form.addEventListener("input",function(){clearTimeout(t); t=setTimeout(saveDraft,600);});
+  form.addEventListener("change",saveDraft);
+
+  /* --- копирование --- */
+  document.getElementById("copyBtn").addEventListener("click",function(){
+    saveDraft();
+    var a=collect(), out=["Ответы Насти — гончарная мастерская",""];
+    Q.forEach(function(q){
+      if(q.g){out.push("— "+q.g.toUpperCase()+" —");return;}
+      var v=a[q.id]; if(Array.isArray(v)) v=v.join(", ");
+      out.push(q.t); out.push(v?v:"(без ответа)"); out.push("");
+    });
+    var text=out.join("\n");
+    var OK="Готово, ответы скопированы. Открой чат с Артуром, вставь и отправь.";
+    function manual(){
+      var sh=document.getElementById("copyshow"); sh.style.display="block"; sh.value=text; sh.focus(); sh.select();
+      setStatus("Автоматически скопировать не вышло. Ответы ниже — выдели всё и скопируй вручную.","err");
+    }
+    function fallback(){
+      var cb=document.getElementById("copybox"); cb.value=text; cb.select();
+      var ok=false; try{ok=document.execCommand("copy");}catch(e){}
+      if(ok) setStatus(OK,"ok"); else manual();
+    }
+    if(navigator.clipboard&&navigator.clipboard.writeText){
+      navigator.clipboard.writeText(text).then(function(){setStatus(OK,"ok");},fallback);
+    } else fallback();
+  });
+})();
+</script>
+</body>
+</html>
