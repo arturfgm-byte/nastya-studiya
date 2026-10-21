@@ -1,0 +1,398 @@
+<!doctype html>
+<html lang="ru">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="robots" content="noindex,nofollow">
+<title>План запуска студии</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+:root{
+  --bg:#f3f4f1; --surface:#ffffff; --surface-2:#eaede6; --ink:#1d2421; --ink-2:#4a554f; --muted:#7a857f;
+  --line:#d7ddd5; --accent:#4f7a68; --accent-ink:#ffffff; --accent-soft:#dfeae4;
+  --clay:#b8774f; --clay-soft:#f3e4d9; --warn:#8a6d1f; --warn-soft:#f4ecd4;
+  --radius:16px; --shadow:0 1px 2px rgba(20,30,25,.06),0 4px 16px rgba(20,30,25,.05);
+  color-scheme:light;
+}
+@media (prefers-color-scheme:dark){
+  :root:not([data-theme="light"]){
+    --bg:#141917; --surface:#1c2320; --surface-2:#232c28; --ink:#e7ece9; --ink-2:#b5c0ba; --muted:#86928b;
+    --line:#2f3a35; --accent:#7fb39c; --accent-ink:#0f1513; --accent-soft:#24362e;
+    --clay:#e0a57f; --clay-soft:#3a2b22; --warn:#d8b860; --warn-soft:#352e1a;
+    --shadow:none; color-scheme:dark;
+  }
+}
+:root[data-theme="dark"]{
+  --bg:#141917; --surface:#1c2320; --surface-2:#232c28; --ink:#e7ece9; --ink-2:#b5c0ba; --muted:#86928b;
+  --line:#2f3a35; --accent:#7fb39c; --accent-ink:#0f1513; --accent-soft:#24362e;
+  --clay:#e0a57f; --clay-soft:#3a2b22; --warn:#d8b860; --warn-soft:#352e1a;
+  --shadow:none; color-scheme:dark;
+}
+*{box-sizing:border-box}
+html{scroll-behavior:smooth;scroll-padding-top:64px}
+body{margin:0;background:var(--bg);color:var(--ink);font:17px/1.6 "Manrope",system-ui,-apple-system,"Segoe UI",sans-serif;-webkit-text-size-adjust:100%}
+a{color:var(--accent);text-underline-offset:2px}
+.wrap{max-width:880px;margin:0 auto;padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px))}
+header.hero{position:relative;overflow:hidden;padding-block:56px 30px}
+.hero .kicker{font-size:13px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:var(--clay)}
+.hero h1{font-size:clamp(32px,6vw,50px);line-height:1.08;margin:10px 0 18px;font-weight:800;letter-spacing:-.02em;max-width:660px}
+.hero .lead{font-size:19px;color:var(--ink-2);max-width:640px;margin:0}
+.wheel{position:absolute;right:-90px;top:30px;width:340px;height:340px;border-radius:50%;pointer-events:none;
+  background:repeating-radial-gradient(circle,var(--clay-soft) 0 14px,transparent 14px 28px);opacity:.9;z-index:-1}
+@media (max-width:700px){.wheel{width:240px;height:240px;right:-110px;top:10px;opacity:.6}}
+nav.toc{position:sticky;top:0;z-index:10;background:color-mix(in srgb,var(--bg) 92%,transparent);backdrop-filter:blur(8px);border-bottom:1px solid var(--line)}
+nav.toc .wrap{display:flex;gap:6px;overflow-x:auto;padding-block:10px;scrollbar-width:none}
+nav.toc .wrap::-webkit-scrollbar{display:none}
+nav.toc a{flex:none;text-decoration:none;color:var(--ink-2);font-size:14px;font-weight:600;padding:6px 12px;border-radius:999px;background:var(--surface);border:1px solid var(--line);white-space:nowrap}
+section{padding-block:30px}
+h2{font-size:clamp(24px,4vw,30px);line-height:1.2;margin:0 0 16px;font-weight:800;letter-spacing:-.015em}
+h3{font-size:18px;margin:0 0 6px;font-weight:700}
+p{margin:0 0 14px}
+.letter{background:var(--surface);border:1px solid var(--line);border-radius:var(--radius);padding:24px;box-shadow:var(--shadow);font-size:18px}
+.letter p:last-child{margin:0}
+.sign{font-weight:700;color:var(--clay)}
+.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:12px}
+.card{background:var(--surface);border:1px solid var(--line);border-radius:var(--radius);padding:18px;box-shadow:var(--shadow)}
+.card .em{font-size:26px;line-height:1;margin-bottom:10px;display:block}
+.card.you{border-top:4px solid var(--accent)}
+.card.we{border-top:4px solid var(--clay)}
+.card ul{margin:8px 0 0;padding-left:20px;color:var(--ink-2);font-size:15.5px}
+.card li{margin-bottom:5px}
+.note{border-left:4px solid var(--accent);background:var(--accent-soft);padding:14px 16px;border-radius:0 12px 12px 0;margin:16px 0}
+.note.clay{border-color:var(--clay);background:var(--clay-soft)}
+.phases{display:grid;grid-template-columns:repeat(4,1fr);gap:10px}
+@media (max-width:760px){.phases{grid-template-columns:1fr 1fr}}
+@media (max-width:440px){.phases{grid-template-columns:1fr}}
+.ph{background:var(--surface);border:1px solid var(--line);border-radius:var(--radius);padding:16px;box-shadow:var(--shadow)}
+.ph .when{font-size:12px;font-weight:800;letter-spacing:.06em;text-transform:uppercase;color:var(--clay)}
+.ph h3{font-size:19px;margin:4px 0 8px}
+.ph ol{margin:0;padding-left:0;list-style:none;font-size:15px;color:var(--ink-2)}
+.ph li{margin-bottom:6px;display:flex;gap:8px}
+.ph li b{flex:none;width:22px;height:22px;border-radius:50%;background:var(--accent-soft);color:var(--accent);font-size:12px;display:inline-flex;align-items:center;justify-content:center;margin-top:1px}
+.ph.key{border-color:var(--clay)}
+.ph.key li b{background:var(--clay-soft);color:var(--clay)}
+.gantt{background:var(--surface);border:1px solid var(--line);border-radius:var(--radius);padding:14px 14px 10px;box-shadow:var(--shadow);overflow-x:auto}
+.g-in{min-width:640px}
+.g-months{display:grid;grid-template-columns:170px repeat(11,1fr);font-size:12px;color:var(--muted);font-weight:700;border-bottom:1px solid var(--line);padding-bottom:6px;margin-bottom:6px}
+.g-months span{text-align:center}
+.g-row{display:grid;grid-template-columns:170px 1fr;align-items:center;min-height:26px;font-size:13px}
+.g-name{white-space:nowrap;overflow:hidden;text-overflow:ellipsis;padding-right:8px;font-weight:600;color:var(--ink-2)}
+.g-track{position:relative;height:14px;background:repeating-linear-gradient(90deg,transparent 0 calc(100%/11 - 1px),var(--line) calc(100%/11 - 1px) calc(100%/11))}
+.g-bar{position:absolute;top:0;height:14px;border-radius:7px;background:var(--accent)}
+.g-bar.long{background:color-mix(in srgb,var(--accent) 45%,transparent)}
+.g-bar.key{background:var(--clay)}
+.stage{background:var(--surface);border:1px solid var(--line);border-radius:var(--radius);box-shadow:var(--shadow);margin:14px 0;padding:18px}
+.s-head{display:grid;grid-template-columns:44px 1fr;gap:12px;align-items:center;margin-bottom:6px}
+.num{width:44px;height:44px;border-radius:50%;background:var(--accent-soft);color:var(--accent);font-weight:800;font-size:18px;display:flex;align-items:center;justify-content:center}
+.stage.key .num{background:var(--clay-soft);color:var(--clay)}
+.s-title{font-weight:800;font-size:19px;line-height:1.25}
+.s-when{font-size:14px;color:var(--muted);font-weight:600}
+.s-goal{font-size:16.5px;margin:12px 0}
+.cols{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+@media (max-width:700px){.cols{grid-template-columns:1fr}.s-head{grid-template-columns:38px 1fr}.num{width:38px;height:38px;font-size:16px}}
+.box{border-radius:12px;padding:12px 14px;background:var(--surface-2)}
+.box h4{margin:0 0 6px;font-size:13px;letter-spacing:.05em;text-transform:uppercase}
+.box.you h4{color:var(--accent)}
+.box.we h4{color:var(--clay)}
+.box ul{margin:0;padding-left:18px;font-size:15.5px;color:var(--ink-2)}
+.box li{margin-bottom:5px}
+.ready{margin:12px 0 0;padding:10px 14px;border-radius:12px;border:1px dashed var(--accent);font-size:15.5px}
+.ready b{color:var(--accent)}
+.talk{margin:12px 0 0}
+.talk h4{margin:0 0 6px;font-size:13px;letter-spacing:.05em;text-transform:uppercase;color:var(--warn)}
+.talk ul{margin:0;padding-left:20px;font-size:15.5px}
+.talk li{margin-bottom:4px}
+.fear{display:grid;grid-template-columns:auto 1fr;gap:4px 14px;align-items:start;margin-bottom:12px}
+.fear .em{font-size:24px}
+.fear p{margin:0;color:var(--ink-2);font-size:15.5px}
+.flow{display:grid;grid-template-columns:repeat(6,1fr);gap:8px;margin:6px 0 14px}
+@media (max-width:760px){.flow{grid-template-columns:1fr 1fr 1fr}}
+@media (max-width:440px){.flow{grid-template-columns:1fr 1fr}}
+.step{background:var(--surface);border:1px solid var(--line);border-radius:12px;padding:12px;box-shadow:var(--shadow)}
+.step .n{font-size:12px;font-weight:800;color:var(--clay);letter-spacing:.05em}
+.step b{display:block;font-size:15.5px;margin:2px 0 4px}
+.step span{font-size:13.5px;color:var(--ink-2);line-height:1.4;display:block}
+.eq{background:var(--surface);border:1px solid var(--line);border-radius:var(--radius);padding:16px;box-shadow:var(--shadow)}
+.eq .em{font-size:24px;line-height:1;display:block;margin-bottom:8px}
+.eq p{font-size:15px;color:var(--ink-2);margin:0 0 8px}
+.eq .know{font-size:14.5px;margin:0;padding-left:18px;color:var(--ink-2)}
+.eq .know li{margin-bottom:4px}
+.eq .price{display:inline-block;margin-top:8px;font-size:13px;font-weight:700;color:var(--clay);background:var(--clay-soft);border-radius:999px;padding:3px 10px}
+.eq.must{border-top:4px solid var(--clay)}
+footer{padding-block:28px 50px;color:var(--muted);font-size:14px}
+</style>
+</head>
+<body>
+
+<header class="hero">
+  <div class="wheel" aria-hidden="true"></div>
+  <div class="wrap">
+    <div class="kicker">Твоя студия · общий план</div>
+    <h1>План запуска твоей студии</h1>
+    <p class="lead">Здесь весь путь от сегодняшнего дня до открытия в начале марта и первых месяцев работы. Ничего заполнять не нужно, просто прочитай. По этому плану мы втроём и будем разговаривать, этап за этапом.</p>
+  </div>
+</header>
+
+<nav class="toc" aria-label="Разделы">
+  <div class="wrap">
+    <a href="#kratko">План коротко</a>
+    <a href="#kak">Как работаем</a>
+    <a href="#karta">По месяцам</a>
+    <a href="#etapy">Этапы подробно</a>
+    <a href="#tehnika">Как устроена студия</a>
+    <a href="#strahi">Твои страхи</a>
+    <a href="#dalshe">Что дальше</a>
+  </div>
+</nav>
+
+<main>
+<section id="kratko">
+  <div class="wrap">
+    <h2>План коротко</h2>
+    <p>Четыре шага, внутри них 12 этапов. Подробно каждый этап расписан <a href="#etapy">ниже</a>.</p>
+    <div class="phases">
+      <div class="ph"><div class="when">Ноябрь</div><h3>Придумываем</h3>
+        <ol><li><b>1</b>Договариваемся на берегу</li><li><b>2</b>Разведка: рынок и техника</li><li><b>3</b>Какая у меня студия</li><li><b>4</b>Деньги: бюджет и план</li></ol></div>
+      <div class="ph key"><div class="when">Ноябрь — декабрь</div><h3>Находим место</h3>
+        <ol><li><b>5</b>Помещение — договор до 20 декабря</li><li><b>6</b>Оформление: ИП, налоги, счёт</li></ol></div>
+      <div class="ph"><div class="when">Январь — февраль</div><h3>Строим</h3>
+        <ol><li><b>7</b>Ремонт, печь, круги</li><li><b>8</b>Соцсети и первые гости (с ноября)</li><li><b>9</b>Команда и порядок</li><li><b>10</b>Пробные занятия</li></ol></div>
+      <div class="ph key"><div class="when">Март и дальше</div><h3>Открываемся</h3>
+        <ol><li><b>11</b>Открытие — до 8 Марта</li><li><b>12</b>Первые полгода</li></ol></div>
+    </div>
+    <div class="note clay"><b>Самое срочное — помещение.</b> Чтобы открыться в начале марта, договор аренды нужно подписать примерно до 20 декабря: ремонт и поставка печи вместе займут около двух месяцев.</div>
+    <div class="note"><b>Техническую сторону изучаешь с самого начала.</b> Из чего состоит студия — печь, круги, сушка, вода, электричество, вентиляция — расписано в разделе <a href="#tehnika">«Как устроена студия»</a>. Без этого не выбрать помещение и не посчитать бюджет, поэтому разбираемся в технике уже в ноябре, на этапе 2.</div>
+  </div>
+</section>
+
+<section id="kak">
+  <div class="wrap">
+    <div class="letter">
+      <p>Настя, мы хотим, чтобы студию создала ты. Не так, что мы всё сделаем, а ты придёшь вести занятия. Ты сама ищешь помещение, договариваешься, выбираешь печь, придумываешь название, находишь первых гостей. Так через полгода ты будешь знать свою студию до последнего винтика, и это будет по-настоящему твоё.</p>
+      <p>Мы рядом: даём деньги на старт, помогаем с бумагами, ремонтом и советом, ездим с тобой туда, где нужен взрослый взгляд. Но руль у тебя.</p>
+      <p class="sign">Артур и Женя</p>
+    </div>
+
+    <h2 style="margin-top:30px">Как мы работаем</h2>
+    <div class="grid">
+      <div class="card you"><span class="em">🧭</span><h3>Ты — хозяйка проекта</h3>
+        <ul><li>Ведёшь все этапы и сама ставишь себе сроки</li><li>Принимаешь решения по студии: место, стиль, форматы, цены, люди</li></ul></div>
+      <div class="card we"><span class="em">🤝</span><h3>Мы — помогаем</h3>
+        <ul><li>Деньги на запуск и запас на первые месяцы</li><li>ИП, аренда, ремонт: объясним и проверим</li><li>Честное мнение, даже когда оно неудобное</li></ul></div>
+      <div class="card"><span class="em">☕</span><h3>Раз в неделю — встреча</h3>
+        <ul><li>30–45 минут втроём, за чаем</li><li>Что сделано, что мешает, какое решение нужно</li><li>Крупные траты решаем вместе</li></ul></div>
+    </div>
+  </div>
+</section>
+
+<section id="karta">
+  <div class="wrap">
+    <h2>По месяцам</h2>
+    <p>Многие этапы идут одновременно. Оранжевые — самые важные по срокам.</p>
+    <div class="gantt"><div class="g-in">
+      <div class="g-months"><span></span><span>Окт</span><span>Ноя</span><span>Дек</span><span>Янв</span><span>Фев</span><span>Мар</span><span>Апр</span><span>Май</span><span>Июн</span><span>Июл</span><span>Авг</span></div>
+      <div class="g-row"><div class="g-name">1. Договорённость</div><div class="g-track"><i class="g-bar" style="left:5.9%;width:3.2%"></i></div></div>
+      <div class="g-row"><div class="g-name">2. Рынок и техника</div><div class="g-track"><i class="g-bar" style="left:9.1%;width:6%"></i></div></div>
+      <div class="g-row"><div class="g-name">3. Какая у меня студия</div><div class="g-track"><i class="g-bar" style="left:10.9%;width:5%"></i></div></div>
+      <div class="g-row"><div class="g-name">4. Деньги</div><div class="g-track"><i class="g-bar key" style="left:13.6%;width:4.1%"></i></div></div>
+      <div class="g-row"><div class="g-name">5. Помещение</div><div class="g-track"><i class="g-bar key" style="left:11.8%;width:12.3%"></i></div></div>
+      <div class="g-row"><div class="g-name">6. Оформление</div><div class="g-track"><i class="g-bar" style="left:15.9%;width:7.7%"></i></div></div>
+      <div class="g-row"><div class="g-name">7. Ремонт и оснащение</div><div class="g-track"><i class="g-bar key" style="left:20.9%;width:20.9%"></i></div></div>
+      <div class="g-row"><div class="g-name">8. Соцсети и гости</div><div class="g-track"><i class="g-bar long" style="left:9.1%;width:90.4%"></i></div></div>
+      <div class="g-row"><div class="g-name">9. Команда и порядок</div><div class="g-track"><i class="g-bar" style="left:34.5%;width:8.2%"></i></div></div>
+      <div class="g-row"><div class="g-name">10. Пробные занятия</div><div class="g-track"><i class="g-bar" style="left:40.5%;width:4.5%"></i></div></div>
+      <div class="g-row"><div class="g-name">11. Открытие</div><div class="g-track"><i class="g-bar key" style="left:45%;width:3.2%"></i></div></div>
+      <div class="g-row"><div class="g-name">12. Первые полгода</div><div class="g-track"><i class="g-bar long" style="left:45.5%;width:54%"></i></div></div>
+    </div></div>
+  </div>
+</section>
+
+<section id="etapy">
+  <div class="wrap">
+    <h2>Этапы подробно</h2>
+    <p>У каждого этапа: зачем он, что делаешь ты, чем помогаем мы, когда он готов и о чём поговорим вместе.</p>
+
+    <div class="stage"><div class="s-head"><span class="num">1</span><div><div class="s-title">Договариваемся на берегу</div><div class="s-when">до 1 ноября</div></div></div>
+      <p class="s-goal"><b>Зачем.</b> Спокойно проговорить, как мы работаем вместе: кто что решает, сколько денег, что делаем, если что-то пойдёт не так. Без бумаг, просто честный разговор, чтобы потом не было недосказанности.</p>
+      <div class="cols"><div class="box you"><h4>Делаешь ты</h4><ul><li>Решаешь, что берёшь проект на себя</li><li>Говоришь, чего ждёшь от нас и в чём нужна помощь</li><li>Приносишь свои вопросы и сомнения</li></ul></div>
+      <div class="box we"><h4>Помогаем мы</h4><ul><li>Говорим, сколько готовы вложить</li><li>Обсуждаем, как делить прибыль, пока вложения не вернулись и после</li><li>Объясняем запас на случай убытков в первые месяцы</li></ul></div></div>
+      <div class="ready"><b>Этап готов, когда</b> мы втроём проговорили правила и всем понятно, кто за что отвечает.</div>
+      <div class="talk"><h4>Обсудим вместе</h4><ul><li>Какие решения принимаешь только ты, а какие обсуждаем вместе?</li><li>Как часто встречаемся и где?</li><li>Что делаем, если через полгода студия не выходит в ноль?</li></ul></div>
+    </div>
+
+    <div class="stage"><div class="s-head"><span class="num">2</span><div><div class="s-title">Разведка: рынок и техника</div><div class="s-when">ноябрь, 2–3 недели</div></div></div>
+      <p class="s-goal"><b>Зачем.</b> Увидеть рынок своими глазами: как работают другие студии, сколько стоят занятия, что нравится гостям. И разобраться, как студия устроена изнутри: печь, круги, сушка, вода, электричество. Это сильнее любой таблицы.</p>
+      <div class="cols"><div class="box you"><h4>Делаешь ты</h4><ul><li>Сходить гостьей в 2–3 студии, в том числе поближе к нашему району</li><li>Позвонить ещё в 3–4 как клиент: цены, свободные места, условия</li><li>Записать про студию у Коломенской, где ты занимаешься: что нравится и что бы ты сделала иначе</li><li>Узнать у знакомого мастера, сколько платят мастерам и сколько стоят печь и глина</li><li>Изучить технику по разделу <a href="#tehnika">«Как устроена студия»</a>: попросить мастера показать печь и весь путь изделия от лепки до выдачи</li></ul></div>
+      <div class="box we"><h4>Помогаем мы</h4><ul><li>Оплачиваем походы в студии — это вложение в проект</li><li>Даём простую таблицу, куда всё записывать</li><li>Объясняем строительную часть: электрику, вентиляцию, слив</li></ul></div></div>
+      <div class="ready"><b>Этап готов, когда</b> есть сравнение 6–8 студий, твои «3 вещи, которые я сделаю лучше» и ты можешь своими словами объяснить, из чего состоит студия.</div>
+      <div class="talk"><h4>Обсудим вместе</h4><ul><li>Чем наша студия будет отличаться от других?</li><li>Что люди ценят больше всего: атмосферу, цену, мастера, близость к дому?</li><li>Есть ли гончарные студии рядом с нашим районом?</li><li>Что в технике оказалось неожиданным?</li></ul></div>
+    </div>
+
+    <div class="stage"><div class="s-head"><span class="num">3</span><div><div class="s-title">Какая у меня студия</div><div class="s-when">ноябрь</div></div></div>
+      <p class="s-goal"><b>Зачем.</b> Собрать образ студии: название, атмосфера «маленькой Японии», форматы, цены, расписание.</p>
+      <div class="cols"><div class="box you"><h4>Делаешь ты</h4><ul><li>Придумать 3–5 вариантов названия</li><li>Собрать доску вдохновения: 20–30 картинок интерьера, посуды, света</li><li>Решить, какие форматы на старте и почём</li><li>Нарисовать расписание недели: какие дни и часы</li></ul></div>
+      <div class="box we"><h4>Помогаем мы</h4><ul><li>Проверяем, свободны ли название, ник в соцсетях и адрес сайта</li><li>Говорим честно, что нравится, а что нет</li></ul></div></div>
+      <div class="ready"><b>Этап готов, когда</b> есть одна страница «Моя студия»: название, для кого, атмосфера, форматы, цены, расписание.</div>
+      <div class="talk"><h4>Обсудим вместе</h4><ul><li>Кто твои первые 50 гостей и где их найти?</li><li>Сколько стоит у нас мастер-класс и почему именно столько?</li><li>Чай, тишина, японский стиль — как это почувствует гость с порога?</li></ul></div>
+    </div>
+
+    <div class="stage key"><div class="s-head"><span class="num">4</span><div><div class="s-title">Деньги: бюджет и план</div><div class="s-when">ноябрь</div></div></div>
+      <p class="s-goal"><b>Зачем.</b> Понять деньги студии самой: сколько нужно на запуск, когда выйдем в ноль, сколько ты будешь зарабатывать.</p>
+      <div class="cols"><div class="box you"><h4>Делаешь ты</h4><ul><li>Разобраться в расчёте: поменять цены, число гостей, аренду и посмотреть, что меняется</li><li>Составить свой список покупок по разделу <a href="#tehnika">«Как устроена студия»</a></li><li>Предложить, какие траты ты делаешь сама, без обсуждения</li></ul></div>
+      <div class="box we"><h4>Помогаем мы</h4><ul><li>Объясняем расчёт, отвечаем на любые вопросы</li><li>Вместе утверждаем бюджет</li><li>Для ориентира: запуск около 3 млн ₽ и до 0,5 млн ₽ запаса на первые месяцы. Твоя цель 100 тыс. ₽ в месяц реальна, если гости пойдут</li></ul></div></div>
+      <div class="ready"><b>Этап готов, когда</b> бюджет понятен и утверждён, запас на первые месяцы отложен.</div>
+      <div class="talk"><h4>Обсудим вместе</h4><ul><li>Что делаем, если гостей меньше, чем думали?</li><li>Где можно сэкономить на старте, а где нельзя?</li><li>Сколько ты хочешь платить себе в первые месяцы?</li></ul></div>
+    </div>
+
+    <div class="stage key"><div class="s-head"><span class="num">5</span><div><div class="s-title">Помещение</div><div class="s-when">ноябрь — до 20 декабря</div></div></div>
+      <p class="s-goal"><b>Зачем.</b> Найти и снять помещение. Это самый важный этап: от него зависят и деньги, и сроки.</p>
+      <div class="cols"><div class="box you"><h4>Делаешь ты</h4><ul><li>Посмотреть 4–6 помещений: №1, 3, 6, 9 с карты и новые</li><li>Проверить каждое по списку: вода и слив, электричество под печь, вентиляция, вход с улицы, место для вывески (почему это важно — в разделе <a href="#tehnika">«Как устроена студия»</a>)</li><li>Спросить хозяина, можно ли мокрые работы и печь</li><li>Договориться о скидке на время ремонта (1–2 месяца) и сроке аренды</li></ul></div>
+      <div class="box we"><h4>Помогаем мы</h4><ul><li>Ездим с тобой на вторые просмотры</li><li>Проверяем техническую часть и договор аренды</li><li>Подсказываем, как торговаться</li></ul></div></div>
+      <div class="ready"><b>Этап готов, когда</b> договор аренды подписан, ключи у тебя.</div>
+      <div class="talk"><h4>Обсудим вместе</h4><ul><li>Что важнее — цена или место?</li><li>Сколько готовы платить в месяц?</li><li>Что делать, если №1 уйдёт раньше?</li></ul></div>
+    </div>
+
+    <div class="stage"><div class="s-head"><span class="num">6</span><div><div class="s-title">Оформление</div><div class="s-when">конец ноября — декабрь</div></div></div>
+      <p class="s-goal"><b>Зачем.</b> Стать предпринимателем официально: ИП, налоги, счёт и касса.</p>
+      <div class="cols"><div class="box you"><h4>Делаешь ты</h4><ul><li>Зарегистрировать ИП через Госуслуги (бесплатно)</li><li>Выбрать налоговый режим: патент или упрощёнка</li><li>Открыть счёт, подключить кассу и оплату картой</li><li>Решить, как будешь вести учёт денег</li></ul></div>
+      <div class="box we"><h4>Помогаем мы</h4><ul><li>Проходим с тобой каждую бумагу и объясняем</li><li>Сравниваем патент и упрощёнку на твоих цифрах</li></ul></div></div>
+      <div class="ready"><b>Этап готов, когда</b> ИП, счёт и касса есть.</div>
+      <div class="talk"><h4>Обсудим вместе</h4><ul><li>Патент или упрощёнка?</li><li>Как ты будешь вести учёт денег: приложение банка, таблица?</li></ul></div>
+    </div>
+
+    <div class="stage key"><div class="s-head"><span class="num">7</span><div><div class="s-title">Ремонт и оснащение</div><div class="s-when">печь — заказ в декабре; ремонт — январь–февраль</div></div></div>
+      <p class="s-goal"><b>Зачем.</b> Превратить помещение в студию: ремонт в японском стиле, печь, круги, мебель, посуда для чая.</p>
+      <div class="cols"><div class="box you"><h4>Делаешь ты</h4><ul><li>Утвердить планировку: где круги, стол, печь, чайная зона, сушка</li><li>Выбрать материалы и цвета, следить за стилем</li><li>Выбрать и заказать печь (поставка до 1–2 месяцев), круги, стеллажи, мебель — по своему списку из раздела <a href="#tehnika">«Как устроена студия»</a></li><li>Принимать работы: ходить на объект и проверять</li></ul></div>
+      <div class="box we"><h4>Помогаем мы</h4><ul><li>Находим строителей и следим за качеством и сметой</li><li>Советуем по технике и электрике</li><li>Подсказываем, где купить дешевле без потери качества</li></ul></div></div>
+      <div class="ready"><b>Этап готов, когда</b> студия готова к пробным занятиям, печь проверена пробным обжигом.</div>
+      <div class="talk"><h4>Обсудим вместе</h4><ul><li>Сколько кругов на старте — 3 или 4?</li><li>Новая печь или б/у?</li><li>Что сделать своими руками, чтобы было душевнее?</li></ul></div>
+    </div>
+
+    <div class="stage"><div class="s-head"><span class="num">8</span><div><div class="s-title">Соцсети и первые гости</div><div class="s-when">с ноября и всегда</div></div></div>
+      <p class="s-goal"><b>Зачем.</b> Собрать первых гостей ещё до открытия. Это лучший ответ на страх «не будет клиентов».</p>
+      <div class="cols"><div class="box you"><h4>Делаешь ты</h4><ul><li>Завести соцсети студии: ВКонтакте, Telegram, потом Яндекс Карты и 2ГИС</li><li>2–3 поста или ролика в неделю: поиск помещения, ремонт, твои изделия</li><li>Собирать список тех, кто хочет прийти первым</li><li>Продавать подарочные сертификаты к 14 февраля и 8 Марта</li></ul></div>
+      <div class="box we"><h4>Помогаем мы</h4><ul><li>Учим настраивать рекламу, деньги на неё есть в бюджете</li><li>Рассказываем друзьям и знакомым</li><li>Помогаем со съёмкой, если нужно</li></ul></div></div>
+      <div class="ready"><b>Этап готов, когда</b> к открытию у студии 300+ подписчиков и 50+ человек ждут первых занятий.</div>
+      <div class="talk"><h4>Обсудим вместе</h4><ul><li>Что тебе проще — снимать ролики или писать?</li><li>Кто поможет со съёмкой?</li><li>Какой первый пост ты выложишь?</li></ul></div>
+    </div>
+
+    <div class="stage"><div class="s-head"><span class="num">9</span><div><div class="s-title">Команда и порядок</div><div class="s-when">февраль</div></div></div>
+      <p class="s-goal"><b>Зачем.</b> Устроить работу так, чтобы студия жила и в дни, когда ты на учёбе, а деньги и записи были под контролем.</p>
+      <div class="cols"><div class="box you"><h4>Делаешь ты</h4><ul><li>Решить, что во вторник и четверг: закрыто, аренда кругов или мастер</li><li>Договориться с мастером об оплате</li><li>Настроить онлайн-запись и правила: предоплата, отмена, опоздания</li><li>Изучить технику безопасности у печи и написать памятку</li></ul></div>
+      <div class="box we"><h4>Помогаем мы</h4><ul><li>Подсказываем, как договориться с мастером</li><li>Даём простую таблицу учёта денег и гостей</li></ul></div></div>
+      <div class="ready"><b>Этап готов, когда</b> расписание на март готово, онлайн-запись работает.</div>
+      <div class="talk"><h4>Обсудим вместе</h4><ul><li>Нужен ли тебе курс инструктора, чтобы увереннее вести занятия?</li><li>Сколько платить мастеру?</li><li>Кто подменит тебя, если заболеешь?</li></ul></div>
+    </div>
+
+    <div class="stage"><div class="s-head"><span class="num">10</span><div><div class="s-title">Пробные занятия</div><div class="s-when">конец февраля</div></div></div>
+      <p class="s-goal"><b>Зачем.</b> Отрепетировать студию на своих: проверить, как идёт занятие от чая до упаковки изделия.</p>
+      <div class="cols"><div class="box you"><h4>Делаешь ты</h4><ul><li>Провести 4–6 занятий для друзей и знакомых, бесплатно или со скидкой</li><li>Отработать сценарий занятия: встреча, чай, работа, уборка, упаковка</li><li>Сделать первый настоящий обжиг</li><li>Собрать отзывы и фото</li></ul></div>
+      <div class="box we"><h4>Помогаем мы</h4><ul><li>Приводим друзей</li><li>Говорим честно, что получилось, а что нет</li></ul></div></div>
+      <div class="ready"><b>Этап готов, когда</b> сценарий отработан, есть 10+ отзывов и фото для соцсетей.</div>
+      <div class="talk"><h4>Обсудим вместе</h4><ul><li>Что пошло не так и как это исправить?</li><li>Сколько времени на самом деле занимает занятие с уборкой?</li></ul></div>
+    </div>
+
+    <div class="stage key"><div class="s-head"><span class="num">11</span><div><div class="s-title">Открытие</div><div class="s-when">начало марта, до 8 Марта</div></div></div>
+      <p class="s-goal"><b>Зачем.</b> Открыть студию для всех.</p>
+      <div class="cols"><div class="box you"><h4>Делаешь ты</h4><ul><li>Устроить праздник открытия</li><li>Пригласить всех, кто ждал открытия</li><li>Провести первые платные занятия</li></ul></div>
+      <div class="box we"><h4>Помогаем мы</h4><ul><li>Мы рядом в этот день</li><li>Зовём всех знакомых</li></ul></div></div>
+      <div class="ready"><b>Этап готов, когда</b> есть первые оплаты и студия работает по расписанию.</div>
+      <div class="talk"><h4>Обсудим вместе</h4><ul><li>Какой праздник открытия ты хочешь?</li></ul></div>
+    </div>
+
+    <div class="stage"><div class="s-head"><span class="num">12</span><div><div class="s-title">Первые полгода</div><div class="s-when">март — август</div></div></div>
+      <p class="s-goal"><b>Зачем.</b> Выйти в ноль и найти, что работает лучше всего. Через год — 100 тыс. ₽ в месяц тебе.</p>
+      <div class="cols"><div class="box you"><h4>Делаешь ты</h4><ul><li>Раз в неделю записывать главные цифры: выручка, гости, загрузка, деньги на счёте</li><li>Раз в месяц разбирать цифры с нами</li><li>Пробовать новые форматы и убирать то, что не идёт</li></ul></div>
+      <div class="box we"><h4>Помогаем мы</h4><ul><li>Советуем</li><li>Держим запас на первые месяцы</li><li>Решаем вместе, если что-то идёт не по плану</li></ul></div></div>
+      <div class="ready"><b>Этап готов, когда</b> через полгода студия в ноль, а через год ты зарабатываешь 100 тыс. ₽ в месяц.</div>
+      <div class="talk"><h4>Обсудим вместе</h4><ul><li>Какие 5 цифр смотрим каждую неделю?</li><li>Когда считаем, что всё хорошо, а когда пора что-то менять?</li><li>Когда думать о второй точке?</li></ul></div>
+    </div>
+  </div>
+</section>
+
+<section id="tehnika">
+  <div class="wrap">
+    <h2>Как устроена студия</h2>
+    <p>Гончарная студия — это не только круги. Глина проходит долгий путь, и под каждый его шаг нужно своё место, техника и инженерия. В этом нужно разобраться самой: от этого зависят выбор помещения, бюджет, расписание и то, что ты будешь обещать гостям.</p>
+
+    <h3 style="margin-top:18px">Путь изделия: от занятия до выдачи</h3>
+    <div class="flow">
+      <div class="step"><div class="n">1</div><b>Лепка</b><span>на круге или руками, на занятии</span></div>
+      <div class="step"><div class="n">2</div><b>Сушка</b><span>от нескольких дней до 1–2 недель, медленно, иначе трещины</span></div>
+      <div class="step"><div class="n">3</div><b>Первый обжиг</b><span>около 900 °C, изделие становится твёрдым</span></div>
+      <div class="step"><div class="n">4</div><b>Глазурь</b><span>покрытие цветом; гость делает сам или мастер</span></div>
+      <div class="step"><div class="n">5</div><b>Второй обжиг</b><span>примерно 1000–1250 °C, зависит от глины и глазури</span></div>
+      <div class="step"><div class="n">6</div><b>Выдача</b><span>обычно через 2–4 недели после занятия</span></div>
+    </div>
+    <div class="note">Из этого пути следует многое: нужны полки, где неделями сохнут изделия десятков гостей, обжиг с остыванием занимает сутки и больше, а печь нужно загружать целиком, чтобы не жечь электричество впустую. Гостю с первого дня надо честно говорить, когда он заберёт свою чашку.</div>
+
+    <h3 style="margin-top:22px">Из чего состоит студия</h3>
+    <p>Оранжевые — главное и самое дорогое. Цены — ориентиры из нашего первого расчёта, их ты уточнишь сама.</p>
+    <div class="grid">
+      <div class="eq must"><span class="em">🔥</span><h3>Печь для обжига</h3>
+        <p>Сердце студии. Электрическая, объёмом 100–150 литров, нагревается до 1300 °C, с программатором, который сам ведёт режим обжига.</p>
+        <ul class="know"><li>Обычно нужна сеть 380 В и мощность около 9 кВт</li><li>Ставится у негорючей стены, с отступами, под вытяжкой</li><li>Поставка — до 1–2 месяцев</li><li>Выбрать: объём, новая или б/у, есть ли сервис в Москве</li></ul>
+        <span class="price">≈ 320 тыс. ₽</span></div>
+      <div class="eq must"><span class="em">🏺</span><h3>Гончарные круги</h3>
+        <p>Электрические, на старте три. Скорость регулируется педалью.</p>
+        <ul class="know"><li>Тихий ход и плавная педаль</li><li>Реверс, то есть вращение в обе стороны (удобно левшам)</li><li>Съёмный поддон от брызг, удобная высота посадки</li></ul>
+        <span class="price">≈ 195 тыс. ₽ за три</span></div>
+      <div class="eq"><span class="em">🗄️</span><h3>Сушка и хранение</h3>
+        <p>Стеллажи, на которых изделия медленно сохнут, и полки с подписями, где ждут обжига и выдачи работы гостей.</p>
+        <ul class="know"><li>Места нужно больше, чем кажется: изделия лежат неделями</li><li>Закрытые полки или плёнка, чтобы сохло равномерно</li><li>Ящик, где глина хранится влажной</li></ul>
+        <span class="price">≈ 150 тыс. ₽ вместе со столами</span></div>
+      <div class="eq"><span class="em">✋</span><h3>Столы для ручной лепки</h3>
+        <p>Крепкие столы с покрытием, которое не боится воды, и табуреты.</p>
+        <ul class="know"><li>Гипсовые плиты: на них подсушивают слишком мокрую глину</li><li>Турнетки — вращающиеся подставки для лепки и росписи</li></ul></div>
+      <div class="eq"><span class="em">🎨</span><h3>Глина, глазури, инструменты</h3>
+        <p>Глина бывает разной (шамотная, каменная масса, фарфор), и каждая выдерживает свою температуру. Глазури подбираются под глину и печь.</p>
+        <ul class="know"><li>Инструменты: стеки, петли, губки, струна для срезки, вёдра</li><li>Фартуки для гостей</li><li>Обрезки глины можно размачивать и использовать снова</li></ul>
+        <span class="price">≈ 110 тыс. ₽ на старт</span></div>
+      <div class="eq must"><span class="em">🚰</span><h3>Вода и слив</h3>
+        <p>Глину нельзя сливать в канализацию: она оседает и забивает трубы. Нужна раковина с отстойником, где глина собирается и вычищается.</p>
+        <ul class="know"><li>Вода рядом с кругами и у столов</li><li>Отдельное место для мытья рук гостей</li></ul></div>
+      <div class="eq must"><span class="em">⚡</span><h3>Электричество</h3>
+        <p>Печи нужна отдельная линия, обычно 380 В. В помещении должна быть выделена достаточная мощность, примерно от 15 кВт.</p>
+        <ul class="know"><li>Проверяется при выборе помещения (этап 5): переделать потом дорого или нельзя</li><li>Обжиг — заметная часть счёта за свет</li></ul></div>
+      <div class="eq"><span class="em">💨</span><h3>Вентиляция и воздух</h3>
+        <p>При обжиге выходят дым и газы, поэтому над печью нужна вытяжка на улицу.</p>
+        <ul class="know"><li>Сухая глиняная пыль вредна для лёгких</li><li>Уборка только влажная: не подметать и не продувать</li></ul></div>
+      <div class="eq"><span class="em">🧯</span><h3>Безопасность</h3>
+        <p>Печь горячая и снаружи, гостей к ней не подпускаем.</p>
+        <ul class="know"><li>Термостойкие перчатки, огнетушитель, аптечка</li><li>Своя памятка по технике безопасности (этап 9)</li></ul></div>
+      <div class="eq"><span class="em">🍵</span><h3>Гостевая часть</h3>
+        <p>То, с чего начинается впечатление: вход, вешалка, место переодеться, чайная зона, туалет.</p>
+        <ul class="know"><li>Здесь живёт твоя «маленькая Япония»</li><li>Касса и онлайн-запись</li></ul>
+        <span class="price">≈ 180 тыс. ₽ на атмосферу и вывеску</span></div>
+    </div>
+
+    <div class="cols" style="margin-top:16px">
+      <div class="box you"><h4>Как изучить — делаешь ты</h4><ul><li>Попросить мастера в студии у Коломенской показать печь: как загружают, какие режимы, сколько длится обжиг, что бывает с браком</li><li>Узнать, какую глину и глазури там берут и где покупают</li><li>Пройти один полный цикл своего изделия от лепки до выдачи и записать сроки</li><li>Сравнить 2–3 поставщиков печей и кругов: сайты, по возможности шоурум</li><li>Составить свой список оборудования с ценами — он нужен на этапах 4 и 7</li></ul></div>
+      <div class="box we"><h4>Помогаем мы</h4><ul><li>Электрика, вентиляция, слив и ремонт — наша строительная часть, это мы проверяем и объясняем</li><li>Смотрим твой список оборудования и задаём неудобные вопросы</li></ul></div>
+    </div>
+    <div class="talk"><h4>Обсудим вместе</h4><ul><li>Какой объём печи нам нужен при наших группах?</li><li>Кто будет загружать печь и следить за обжигом во вторник и четверг?</li><li>Через сколько дней гость забирает изделие и как ему об этом сказать?</li></ul></div>
+  </div>
+</section>
+
+<section id="strahi">
+  <div class="wrap">
+    <h2>Твои страхи — и где на них ответ</h2>
+    <p>Ты честно назвала три страха. Это ровно то, о чём думают все, кто открывает своё дело. На каждый в плане есть свой этап.</p>
+    <div class="fear"><span class="em">⏳</span><div><h3>«Не хватит времени»</h3><p>Студия работает в твои дни: понедельник, среда, пятница и выходные. Что делать во вторник и четверг, решишь сама: закрыто, аренда кругов по записи или мастер (этап 9). До открытия дела раскладываем по неделям, чтобы не навалилось сразу.</p></div></div>
+    <div class="fear"><span class="em">🫖</span><div><h3>«Не будет клиентов»</h3><p>Первых гостей собираем до открытия: ведёшь соцсети, пока идёт ремонт, собираешь список желающих и продаёшь сертификаты к 14 февраля (этап 8). Пробные занятия для друзей дадут первые отзывы (этап 10). Своё отличие ищем на разведке (этап 2).</p></div></div>
+    <div class="fear"><span class="em">📣</span><div><h3>«Не умею рекламировать»</h3><p>Этому учатся, как гончарке. Начинаешь с простого: рассказываешь, как строится студия, людям это интересно. Настраивать рекламу научим, бюджет на неё уже заложен. Этап 8 начинается прямо сейчас, чтобы к марту у тебя был опыт.</p></div></div>
+  </div>
+</section>
+
+<section id="dalshe">
+  <div class="wrap">
+    <h2>Что дальше</h2>
+    <div class="note">Прочитай план и запиши для себя, что непонятно, что нравится и что хочется поменять. Потом встречаемся втроём и идём по плану с начала: первым разговором будет этап 1 «Договариваемся на берегу».</div>
+  </div>
+</section>
+</main>
+
+<footer><div class="wrap">Для Насти от Артура и Жени · октябрь 2026. Сроки примерные, по ходу их уточняешь ты.</div></footer>
+</body>
+</html>
